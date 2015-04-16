@@ -6,10 +6,10 @@
 //Start Time -- This is necessary in case script runs too long
 $startTime = time();
 $maxTime = 300; //Max time in seconds to allow updating to take
-//$maxTime = -1; //Disabled for now, since using batch Update
+$maxTime = -1; //Disabled for now, since using batch Update
 
 //Load Tracker
-include_once "loadTeemoTracker.php";
+require_once "loadTeemoTracker.php";
 $riotAPI = new RiotAPI();
 
 //Make db connection
@@ -311,7 +311,7 @@ $result = mysqli_query($connect,$query);
 $result or die('Error: ' . mysqli_error($connect));
 
 //Generate Heatmaps
-
+define('HEATMAP_FROM_CRON_UPDATE',true);
 require_once('makeHeatmap.php');
 
 

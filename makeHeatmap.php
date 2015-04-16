@@ -4,8 +4,10 @@
 This file generates the heat maps of kills and deaths
 
 */
+
+defined(HEATMAP_FROM_CRON_UPDATE) or die("This file must be accessed by cron_updateStatistics.php");
+
 require_once "gd-heatmap-master/gd_heatmap.php";
-include_once "loadTeemoTracker.php";
 
 //Make db connection
 $connect = mysqli_connect("localhost",SQL_USER,SQL_PASS,SQL_DATABASE);
@@ -45,15 +47,12 @@ $heatmap = new gd_heatmap($killData, $config);
 $heatmap->output('killMap.png');
 
 //Merge with Rift Map
-$dest = imagecreatefrompng('img/rift.png');
-$src = imagecreatefrompng('killMap.png');
+$rift = imagecreatefrompng('img/rift.png');
+$heat = imagecreatefrompng('killMap.png');
 
-imagealphablending($dest, false);
-imagesavealpha($dest, true);
+imagecopymerge($rift, $heat, 0, 0, 0, 0, 512, 512, 80); 
 
-imagecopymerge($dest, $src, 0, 0, 0, 0, 512, 512, 80); 
-
-imagepng($dest,'killMap.png');
+imagepng($rift,'killMap.png');
 
 //==========================================================Get Death Data
 $deathData = array();
@@ -90,15 +89,12 @@ $heatmap = new gd_heatmap($deathData, $config);
 $heatmap->output('deathMap.png');
 
 //Merge with Rift Map
-$dest = imagecreatefrompng('img/rift.png');
-$src = imagecreatefrompng('deathMap.png');
+$rift = imagecreatefrompng('img/rift.png');
+$heat = imagecreatefrompng('deathMap.png');
 
-imagealphablending($dest, false);
-imagesavealpha($dest, true);
+imagecopymerge($rift, $heat, 0, 0, 0, 0, 512, 512, 80); 
 
-imagecopymerge($dest, $src, 0, 0, 0, 0, 512, 512, 80); 
-
-imagepng($dest,'deathMap.png');
+imagepng($rift,'deathMap.png');
 
 //Done
 //echo "OK: Done";
