@@ -1,0 +1,153 @@
+body {
+	background-image: url("img/Teemo_8.jpg");
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size: cover;
+}
+
+.megawrapper{
+	margin-top:25px;
+	margin-bottom:25px;
+}
+
+.sectionwrapper{
+	overflow:hidden;
+	width:100%;
+}
+
+.sectionwrapper>div{
+	margin-left: auto;
+	margin-right: auto;
+	width:60%;
+	min-width: 1000px;
+}
+
+.sectionwrapper>div>div{
+	margin-left: auto;
+	margin-right: auto;
+	width:75%;
+}
+
+h2{
+	font-family:typewriter;
+	font-size:50;
+	font-weight:normal;
+}
+
+#kdacontainer>div{
+	padding: 5px;
+	border-radius: 10px;
+	text-align: center;
+	float:left;
+	margin: 1%;
+}
+
+#kdacontainer>div:nth-child(3n+1){
+	width: 22%;
+    background-color: #00e000;
+}
+
+#kdacontainer>div:nth-child(3n+2){
+	width: 22%;
+    background-color: #e04046;
+}
+
+#kdacontainer>div:nth-child(3n+0){
+	width: 44%;
+    background-color: #b0e0e6;
+}
+
+#kdacontainer>div>div:nth-child(2n+1){
+	font-family:typewriter;
+	font-size:25;
+}
+
+#kdacontainer>div>div:nth-child(2n+0){
+	font-family:scrawl;
+	font-size:50;
+}
+
+.title{
+	padding-top: 20px;
+	border-radius: 10px;
+	text-align: center;
+	background-color: #e0e0e0;
+	font-family:typewriter;
+	font-size:80;
+}
+
+.subtitle{
+	padding-top: 10px;
+	border-radius: 10px;
+	text-align: center;
+	background-color: #e0e0e0;
+	font-family:typewriter;
+	font-size:40;
+	margin-top:40px;
+}
+
+.panel1, .panel2, .panel3{
+	padding: 5px;
+	border-radius: 10px;
+	text-align: center;
+	float:left;
+	margin: 1%;
+	background-color: #e0e0e0;
+}
+
+.panel1{
+	width: 96%;
+}
+
+.panel2{
+	width: 46.5%;
+}
+
+.panel3{
+	width: 29.9%;
+}
+
+.panel1>div:nth-child(3n+1), .panel2>div:nth-child(3n+1), .panel3>div:nth-child(3n+1){
+	font-family:typewriter;
+	font-size:30;
+}
+
+.panel1>div:nth-child(3n+2), .panel2>div:nth-child(3n+2), .panel3>div:nth-child(3n+2){
+	font-family:scrawl;
+	font-size:40;
+}
+
+.panel1>div:nth-child(3n+0), .panel2>div:nth-child(3n+0), .panel3>div:nth-child(3n+0){
+	font-family:scrawl;
+	font-size:25;
+}
+
+.championTable{
+	margin-left: auto;
+    margin-right: auto;
+	width: 100%;
+	text-align: center;
+	float:left;
+	overflow:hidden;
+	padding: 5px;
+	font-family: scrawl;
+	font-size: 30;
+}
+
+.championTable tr th{
+	font-size:15;
+}
+
+.champIcon{
+	width: 30px;
+}
+
+@font-face {
+	font-family: scrawl;
+	src: url(fonts/scratch.ttf);
+}
+
+@font-face {
+	font-family: typewriter;
+	src: url(fonts/specialelite.ttf);
+}
