@@ -6,7 +6,7 @@
 //Start Time -- This is necessary in case script runs too long
 $startTime = time();
 $maxTime = 300; //Max time in seconds to allow updating to take
-$maxTime = -1; //Disabled for now, since using batch Update
+//$maxTime = -1; //Disabled for now, since using batch Update
 
 //Load Tracker
 require_once "loadTeemoTracker.php";
@@ -190,19 +190,41 @@ $result or die('Error: ' . mysqli_error($connect));
 
 //Ward Stats
 $wardPlaceArray = array();
-$query = "SELECT `wardType`, COUNT(`matchID`) as total FROM `ward_place` WHERE `champion` = $trackedChampion GROUP BY `wardType` ";
+$query = <<<EOD
+SELECT 
+	`ward_place`.`wardType` as wardType,
+	COUNT(`ward_place`.`matchID`) as total,
+	`match_stats`.`winner` as winner
+FROM 
+	`ward_place` INNER JOIN `match_stats`
+	ON `ward_place`.`matchID` = `match_stats`.`matchId`
+	AND `ward_place`.`pID` = `match_stats`.`pID`
+WHERE `ward_place`.`champion`= $trackedChampion
+GROUP BY `wardType`, `winner`
+EOD;
 $result = mysqli_query($connect,$query);
 $result or die('Error: ' . mysqli_error($connect));
 while($row = mysqli_fetch_array($result)){
-	$wardPlaceArray[$row['wardType']] = $row['total'];
+	$wardPlaceArray[$row['wardType']."_".$row['winner']] = $row['total'];
 }
 
 $wardKillArray = array();
-$query = "SELECT `wardType`, COUNT(`matchID`) as total FROM `ward_kill` WHERE `killerChampion` = $trackedChampion GROUP BY `wardType`";
+$query = <<<EOD
+SELECT 
+	`ward_kill`.`wardType` as wardType,
+	COUNT(`ward_kill`.`matchID`) as total,
+	`match_stats`.`winner` as winner
+FROM 
+	`ward_kill` INNER JOIN `match_stats`
+	ON `ward_kill`.`matchID` = `match_stats`.`matchId`
+	AND `ward_kill`.`pID` = `match_stats`.`pID`
+WHERE `ward_kill`.`killerChampion`= $trackedChampion
+GROUP BY `wardType`, `winner`
+EOD;
 $result = mysqli_query($connect,$query);
 $result or die('Error: ' . mysqli_error($connect));
 while($row = mysqli_fetch_array($result)){
-	$wardKillArray[$row['wardType']] = $row['total'];
+	$wardKillArray[$row['wardType']."_".$row['winner']] = $row['total'];
 }
 
 
@@ -211,6 +233,7 @@ $query = "
 INSERT INTO `ward_stats` 
 (
 	`championId`,
+	`winner`,
 	`sightPlaced`,
 	`visionPlaced`,
 	`trinketPlaced`,
@@ -225,16 +248,31 @@ INSERT INTO `ward_stats`
 VALUES
 (
 	$trackedChampion,
-	".$wardPlaceArray['SIGHT_WARD'].",
-	".$wardPlaceArray['VISION_WARD'].",
-	".$wardPlaceArray['YELLOW_TRINKET'].",
-	".$wardPlaceArray['YELLOW_TRINKET_UPGRADE'].",
-	".$wardPlaceArray['TEEMO_MUSHROOM'].",
-	".$wardKillArray['SIGHT_WARD'].",
-	".$wardKillArray['VISION_WARD'].",
-	".$wardKillArray['YELLOW_TRINKET'].",
-	".$wardKillArray['YELLOW_TRINKET_UPGRADE'].",
-	".$wardKillArray['TEEMO_MUSHROOM']."
+	0,
+	".$wardPlaceArray['SIGHT_WARD_0'].",
+	".$wardPlaceArray['VISION_WARD_0'].",
+	".$wardPlaceArray['YELLOW_TRINKET_0'].",
+	".$wardPlaceArray['YELLOW_TRINKET_UPGRADE_0'].",
+	".$wardPlaceArray['TEEMO_MUSHROOM_0'].",
+	".$wardKillArray['SIGHT_WARD_0'].",
+	".$wardKillArray['VISION_WARD_0'].",
+	".$wardKillArray['YELLOW_TRINKET_0'].",
+	".$wardKillArray['YELLOW_TRINKET_UPGRADE_0'].",
+	".$wardKillArray['TEEMO_MUSHROOM_0']."
+),
+(
+	$trackedChampion,
+	1,
+	".$wardPlaceArray['SIGHT_WARD_1'].",
+	".$wardPlaceArray['VISION_WARD_1'].",
+	".$wardPlaceArray['YELLOW_TRINKET_1'].",
+	".$wardPlaceArray['YELLOW_TRINKET_UPGRADE_1'].",
+	".$wardPlaceArray['TEEMO_MUSHROOM_1'].",
+	".$wardKillArray['SIGHT_WARD_1'].",
+	".$wardKillArray['VISION_WARD_1'].",
+	".$wardKillArray['YELLOW_TRINKET_1'].",
+	".$wardKillArray['YELLOW_TRINKET_UPGRADE_1'].",
+	".$wardKillArray['TEEMO_MUSHROOM_1']."
 )
 ON DUPLICATE KEY UPDATE 
 `sightPlaced`=VALUES(`sightPlaced`),

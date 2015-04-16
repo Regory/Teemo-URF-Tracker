@@ -1,11 +1,12 @@
 <?php
 /*
-
-This file generates the heat maps of kills and deaths
-
+	This file generates the heat maps of kills and deaths
 */
 
-defined(HEATMAP_FROM_CRON_UPDATE) or die("This file must be accessed by cron_updateStatistics.php");
+//Check that this is being called from cron_updateStatistics.php
+defined('HEATMAP_FROM_CRON_UPDATE') or die("This file must be accessed by cron_updateStatistics.php");
+
+
 
 require_once "gd-heatmap-master/gd_heatmap.php";
 

@@ -26,7 +26,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 $cache_file = "index_cache.php";
 
 //Use Cache if it exists and is not expired
-if (file_exists($cache_file) && $lastUpdate < filemtime($cache_file)) {
+if (file_exists($cache_file) and $lastUpdate < filemtime($cache_file)) {
     ob_start('ob_gzhandler'); //Use ob_gzhandler for compression where available
     readfile($cache_file);
 	echo "<!-- Using Cache of Data From $lastUpdate -->";
@@ -72,7 +72,7 @@ $result or die('Error: ' . mysqli_error($connect));
 
 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 	if($row['championId'] == TRACKED_CHAMPION){
-		$wardStats = $row;
+		$wardStats[$row['winner']] = $row;
 	}
 }
 
@@ -161,10 +161,10 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 				<div>
 					<div>
 						<div class='panel2'>
-							<div>Last Match Analyzed<br /><?php echo $lastMatch ?></div>
+							<div>Last Update<br /><?php echo date('Y/m/d h:i A',$lastUpdate) ?></div>
 						</div>
 						<div class='panel2'>
-							<div>Last Analyzed Time<br /><?php echo date('Y/m/d h:i A', $time) ?></div>
+							<div>Last Analyzed Match<br /><?php echo date('Y/m/d h:i A', $time) ?></div>
 						</div>
 					</div>
 				</div>
@@ -236,6 +236,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 						<div class='panel1'>
 							<div>Damage Dealt:</div>
 							<div><?php echo number_format($championStats['damageDealt']) ?></div>
+							<div>Equivalent to firing the Fountain Laser for <?php echo round($championStats['damageDealt']/2000/60/60,0) ?> hours</div>
 						</div>
 					</div>
 					<div>
@@ -261,8 +262,8 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 					<div>
 						<div class='panel1'>
 							<div>Mushrooms Placed:</div>
-							<div><?php echo number_format($wardStats['mushroomPlaced']) ?></div>
-							<div>Can cover about <?php echo number_format(round($wardStats['mushroomPlaced'] * 120*120 / (14990*15100),1)) ?> Summoner's Rifts</div>
+							<div><?php $mushrooms = $wardStats[0]['mushroomPlaced'] + $wardStats[1]['mushroomPlaced']; echo number_format($mushrooms) ?></div>
+							<div>Can cover about <?php echo number_format(round($mushrooms * 120*120 / (14990*15100),1)) ?> Summoner's Rifts</div>
 						</div>
 					</div>
 					<!--About 59% of Summoner's Rift is Walkable
@@ -306,37 +307,68 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 			</div>
 			<div class='sectionwrapper'>
 				<div>
-					<div class='subtitle'>Wards</div>
-					<div>
+					<div class='subtitle'>Wards Placed</div>
+					<div class='wardwins'>
 						<div class='panel3'>
-							<div>Sight Wards Placed</div>
-							<div><?php echo number_format($wardStats['sightPlaced']) ?></div>
+							<div>Sight Wards Placed in Wins</div>
+							<div><?php echo number_format($wardStats[1]['sightPlaced']) ?></div>
 						</div>
 						<div class='panel3'>
-							<div>Vision Wards Placed</div>
-							<div><?php echo number_format($wardStats['visionPlaced']) ?></div>
+							<div>Vision Wards Placed in Wins</div>
+							<div><?php echo number_format($wardStats[1]['visionPlaced']) ?></div>
 						</div>
 						<div class='panel3'>
-							<div>Trinket Wards Placed</div>
-							<div><?php echo number_format($wardStats['trinketPlaced'] + $wardStats['trinket2Placed']) ?></div>
+							<div>Trinket Wards Placed in Wins</div>
+							<div><?php echo number_format($wardStats[1]['trinketPlaced'] + $wardStats[1]['trinket2Placed']) ?></div>
 						</div>
 					</div>
-					<div>
+					<div class='wardlosses'>
 						<div class='panel3'>
-							<div>Sight Wards Killed</div>
-							<div><?php echo number_format($wardStats['sightKilled']) ?></div>
+							<div>Sight Wards Placed in Losses</div>
+							<div><?php echo number_format($wardStats[0]['sightPlaced']) ?></div>
 						</div>
 						<div class='panel3'>
-							<div>Vision Wards Killed</div>
-							<div><?php echo number_format($wardStats['visionKilled']) ?></div>
+							<div>Vision Wards Placed in Losses</div>
+							<div><?php echo number_format($wardStats[0]['visionPlaced']) ?></div>
 						</div>
 						<div class='panel3'>
-							<div>Trinket Wards Killed</div>
-							<div><?php echo number_format($wardStats['trinketKilled'] + $wardStats['trinket2Killed']) ?></div>
+							<div>Trinket Wards Placed in Losses</div>
+							<div><?php echo number_format($wardStats[0]['trinketPlaced'] + $wardStats[0]['trinket2Placed']) ?></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class='sectionwrapper'>
+				<div>
+					<div class='subtitle'>Wards Destroyed</div>
+					<div class='wardwins'>
+						<div class='panel3'>
+							<div>Sight Wards Killed in Wins</div>
+							<div><?php echo number_format($wardStats[1]['sightKilled']) ?></div>
+						</div>
+						<div class='panel3'>
+							<div>Vision Wards Killed in Wins</div>
+							<div><?php echo number_format($wardStats[1]['visionKilled']) ?></div>
+						</div>
+						<div class='panel3'>
+							<div>Trinket Wards Killed in Wins</div>
+							<div><?php echo number_format($wardStats[1]['trinketKilled'] + $wardStats[1]['trinket2Killed']) ?></div>
 						</div>
 						
-						
-						
+					</div>
+					<div class='wardlosses'>
+						<div class='panel3'>
+							<div>Sight Wards Killed in Losses</div>
+							<div><?php echo number_format($wardStats[0]['sightKilled']) ?></div>
+						</div>
+						<div class='panel3'>
+							<div>Vision Wards Killed in Losses</div>
+							<div><?php echo number_format($wardStats[0]['visionKilled']) ?></div>
+						</div>
+						<div class='panel3'>
+							<div>Trinket Wards Killed in Losses</div>
+							<div><?php echo number_format($wardStats[0]['trinketKilled'] + $wardStats[0]['trinket2Killed']) ?></div>
+						</div>	
 					</div>
 				</div>
 			</div>
