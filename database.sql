@@ -298,6 +298,7 @@ CREATE TABLE IF NOT EXISTS `ward_place` (
 
 CREATE TABLE IF NOT EXISTS `ward_stats` (
   `championId` int(4) NOT NULL,
+  `winner` tinyint(1) NOT NULL,
   `sightPlaced` int(10) NOT NULL,
   `visionPlaced` int(10) NOT NULL,
   `trinketPlaced` int(10) NOT NULL,
@@ -308,8 +309,8 @@ CREATE TABLE IF NOT EXISTS `ward_stats` (
   `trinketKilled` int(10) NOT NULL,
   `trinket2Killed` int(10) NOT NULL,
   `mushroomKilled` int(10) NOT NULL,
-  PRIMARY KEY (`championId`),
-  UNIQUE KEY `championId` (`championId`)
+  PRIMARY KEY (`championId`,`winner`),
+  UNIQUE KEY `championId` (`championId`,`winner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 

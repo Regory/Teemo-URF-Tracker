@@ -42,9 +42,16 @@ class RiotAPI{
 		}
 		
 		$output = curl_exec($curlHandle); //Execute curl
-		$this->lastCall = time(); //The last call is right now		
+		$this->lastCall = time(); //The last call is right now
 		
-		return json_decode($output); //Return curl data
+		$decodedJson = json_decode($output);
+		
+		//Check if valid JSON
+		if(json_last_error() == JSON_ERROR_NONE){
+			return json_decode($output); //Return curl data
+		}else{
+			return "Error: JSON ERROR ".json_last_error().". <br />Output was ".$output;
+		}
 	}
 	
 	/*
@@ -136,12 +143,20 @@ class RiotAPI{
 		$result or die('Error: ' . mysqli_error($this->connect));
 		
 		//Return Status
-		return "OK: Finished getting bucket #".$this->bucket." of ".time()." (Remaining: ". floor(( time() - $this->bucket )/300) .")";
+		$latestBucket = time() - (time() % 300);
+		$remaining = floor(($latestBucket - $this->bucket)/300);
+		$dateZero = new DateTime("@0");
+		$dateRemaining = new DateTime("@".$remaining*MIN_SECONDS_BETWEEN_CALLS);
+		$remainingTime = $dateZero->diff($dateRemaining)->format('%a days, %h hours, %i minutes and %s seconds');
+		
+		return "OK: Finished getting bucket #".$this->bucket." of $latestBucket <br />
+		Remaining: $remaining<br />
+		Estimated Time: $remainingTime";
 	}
 	
 	/*
 		Checks next match to see if Teemo exists.
-		This isn't really necessary, but timelines are bloody 200k
+		This isn't really necessary, but timelines are bloody 200kb
 		Will change hasTrackedChampion from -1 (not yet checked)
 		
 		Input
@@ -152,7 +167,7 @@ class RiotAPI{
 	*/
 	function checkNextMatch(){
 		//Get the oldest matchID where `checked` is false
-		$query = "SELECT `matchID` FROM `matches` WHERE `checked` = 0 ORDER BY `matchID` ASC LIMIT 1";
+		$query = "SELECT `matchID`, COUNT(`matchID`) as remaining FROM `matches` WHERE `checked` = 0 ORDER BY `matchID` ASC LIMIT 1";
 		$result = mysqli_query($this->connect,$query);
 		$result or die('Error: ' . mysqli_error($this->connect));
 		if(mysqli_num_rows($result) == 0){
@@ -161,6 +176,7 @@ class RiotAPI{
 		}
 		while($row = mysqli_fetch_array($result)){
 			$matchID = $row['matchID'];
+			$remaining = $row['remaining'];
 		}
 		
 		//do the curlywurly
@@ -182,12 +198,19 @@ class RiotAPI{
 		$result or die('Error: ' . mysqli_error($this->connect));
 		
 		$o = ($trackedChampionExists == 1) ? "contains the tracked champion" : "does not contain the tracked champion";
-		return "OK: Match $matchID $o";
+		
+		$dateZero = new DateTime("@0");
+		$dateRemaining = new DateTime("@".$remaining*MIN_SECONDS_BETWEEN_CALLS);
+		$remainingTime = $dateZero->diff($dateRemaining)->format('%a days, %h hours, %i minutes and %s seconds');
+		
+		return "OK: Match $matchID $o. <br />
+		Remaining: $remaining <br />
+		Estimated Time: $remainingTime";
 	}
 	
 	/*
 		Gets the full match information, including timeline
-		Kill information is stored in the database
+		Match information is stored in the database
 		
 		Input
 		void
@@ -199,7 +222,7 @@ class RiotAPI{
 		$allOK = true;
 		
 		//Get the oldest matchID where `analyzed` is false and hasTrackedChampion is true
-		$query = "SELECT `matchID` FROM `matches` WHERE `analyzed` = 0 AND hasTrackedChampion = 1 ORDER BY `matchID` ASC LIMIT 1";
+		$query = "SELECT `matchID`, COUNT(`matchID`) as remaining FROM `matches` WHERE `analyzed` = 0 AND hasTrackedChampion = 1 ORDER BY `matchID` ASC LIMIT 1";
 		$result = mysqli_query($this->connect,$query);
 		$result or die('Error: ' . mysqli_error($this->connect));
 		if(mysqli_num_rows($result) == 0){
@@ -208,6 +231,7 @@ class RiotAPI{
 		}
 		while($row = mysqli_fetch_array($result)){
 			$matchID = $row['matchID'];
+			$remaining = $row['remaining'];
 		}
 		
 		//do the curlywurly
@@ -498,7 +522,14 @@ class RiotAPI{
 				$result = mysqli_query($this->connect,$query);
 				$result or die('Error: ' . mysqli_error($this->connect));
 				
-				return "OK: Match $matchID analyzed";
+				$dateZero = new DateTime("@0");
+				$dateRemaining = new DateTime("@".$remaining*MIN_SECONDS_BETWEEN_CALLS);
+				$remainingTime = $dateZero->diff($dateRemaining)->format('%a days, %h hours, %i minutes and %s seconds');
+				
+				return "OK: Match $matchID analyzed <br />
+				Remaining: $remaining <br />
+				Estimated Time: $remainingTime";
+				
 			}
 			
 			return "ERROR: Something went wrong";
