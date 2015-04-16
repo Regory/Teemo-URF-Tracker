@@ -28,7 +28,7 @@
 			
 			function nextUpdate(){
 				if(toggle == 1){
-					$.post("ajax_getNextBucket.php").done(
+					$.post("ajax_batchUpdate.php", {type:'bucket'}).done(
 						function(data){
 							$('#status').html(data+"<br />");
 							timerhandle = setTimeout("nextUpdate()", interval);
@@ -36,7 +36,7 @@
 					);
 				}
 				if(toggle == 2){
-					$.post("ajax_checkNextMatch.php").done(
+					$.post("ajax_batchUpdate.php", {type:'check'}).done(
 						function(data){
 							$('#status').html(data+"<br />");
 							timerhandle = setTimeout("nextUpdate()", interval);
@@ -44,7 +44,7 @@
 					);
 				}
 				if(toggle == 3){
-					$.post("ajax_analyzeNextMatch.php").done(
+					$.post("ajax_batchUpdate.php", {type:'analyze'}).done(
 						function(data){
 							$('#status').html(data+"<br />");
 							timerhandle = setTimeout("nextUpdate()", interval);

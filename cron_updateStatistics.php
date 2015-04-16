@@ -5,7 +5,7 @@
 
 //Start Time -- This is necessary in case script runs too long
 $startTime = time();
-$maxTime = 300; //Max time in seconds to allow updating to take
+$maxTime = 300; //Max time in seconds to allow updating to take 
 
 //Load Tracker
 include_once "loadTeemoTracker.php";

@@ -13,9 +13,8 @@ class RiotAPI{
 	private $connect;
 	
 	function __construct(){
-		$this->lastCall = 0; //The time of the last call.  Since clients shouldn't result in calls, this should be okay for now.
+		$this->lastCall = 0; //The time of the last call.  Since calls are not client driven, setting to zero and not tracking calls between updates should be fine.
 		$this->bucket = 0; //The last bucket checked.  Will pull from database if this is zero.
-		$this->startTime = microtime(true); //This is in case the script runs forever.
 		
 		//make db connection
 		$this->connect = mysqli_connect("localhost",SQL_USER,SQL_PASS,SQL_DATABASE);
@@ -54,7 +53,7 @@ class RiotAPI{
 		
 		Input
 		$jsonobject - decoded json
-		$pID - participant id
+		$pID - participant id (1 to 10)
 		
 		Output
 		string - champion id (integer stored as type string)
@@ -74,7 +73,7 @@ class RiotAPI{
 		void
 		
 		Output
-		
+		string - Description of Success / Failure
 		
 	*/
 	function getNextBucket(){
@@ -149,7 +148,7 @@ class RiotAPI{
 		void
 		
 		Output
-		
+		string - Description of Success / Failure
 	*/
 	function checkNextMatch(){
 		//Get the oldest matchID where `checked` is false
@@ -194,7 +193,7 @@ class RiotAPI{
 		void
 		
 		Output
-		
+		string - Description of Success / Failure
 	*/
 	function analyzeNextMatch(){
 		$allOK = true;
@@ -502,7 +501,7 @@ class RiotAPI{
 				return "OK: Match $matchID analyzed";
 			}
 			
-			return "Failure";
+			return "ERROR: Something went wrong";
 		}
 	}
 }
