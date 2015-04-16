@@ -126,7 +126,8 @@ CREATE TABLE IF NOT EXISTS `general_info` (
 INSERT INTO `general_info` (`key`, `value`) VALUES
 ('Last Bucket', '1427865600'),
 ('Last Statistics Update', '0'),
-('Update Key', '0');
+('Update Key', '0'),
+('Last Statistics Update Complete', '0');
 
 -- --------------------------------------------------------
 

@@ -5,7 +5,8 @@
 
 //Start Time -- This is necessary in case script runs too long
 $startTime = time();
-$maxTime = 300; //Max time in seconds to allow updating to take 
+$maxTime = 300; //Max time in seconds to allow updating to take
+//$maxTime = -1; //Disabled for now, since using batch Update
 
 //Load Tracker
 include_once "loadTeemoTracker.php";
@@ -312,6 +313,14 @@ $result or die('Error: ' . mysqli_error($connect));
 //Generate Heatmaps
 
 require_once('makeHeatmap.php');
+
+
+//Update Time Complete
+$timeComplete = time();
+$query = "UPDATE `general_info` SET `value` = $timeComplete WHERE `key`='Last Statistics Update Complete';";
+$result = mysqli_query($connect,$query);
+$result or die('Error: ' . mysqli_error($connect));
+
 
 echo "OK: Completed updating successfully";
 

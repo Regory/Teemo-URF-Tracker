@@ -2,18 +2,34 @@
 /*
 
 The Index Page!
+This is the page people look at
 
 */
 
+include_once "loadTeemoTracker.php";
+
+//Make db connection
+$connect = mysqli_connect("localhost",SQL_USER,SQL_PASS,SQL_DATABASE);
+if (mysqli_connect_errno($connect)){die("Failed to connect to MySQL: " . mysqli_connect_error());}
+
+//==========================================================================
 //Page Caching
-$cache_expiry_time = 1; //Cache expires every 5 minutes
+
+//First, get time of last statistics update completion
+$query = "SELECT `value` from `general_info` WHERE `key`='Last Statistics Update Complete';";
+$result = mysqli_query($connect,$query);
+$result or die('Error: ' . mysqli_error($connect));
+while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+	$lastUpdate = $row['value'];
+}
+
 $cache_file = "index_cache.php";
 
 //Use Cache if it exists and is not expired
-if (file_exists($cache_file) && time() - $cache_expiry_time < filemtime($cache_file)) {
+if (file_exists($cache_file) && $lastUpdate < filemtime($cache_file)) {
     ob_start('ob_gzhandler'); //Use ob_gzhandler for compression where available
     readfile($cache_file);
-	//echo "Using Cache";
+	echo "<!-- Using Cache of Data From $lastUpdate -->";
     ob_end_flush(); //Flush and turn off output buffering
     die(); 
 }
@@ -22,12 +38,6 @@ if (file_exists($cache_file) && time() - $cache_expiry_time < filemtime($cache_f
 ob_start('ob_gzhandler');  //Use ob_gzhandler for compression where available
 
 //==========================================================================================
-
-include_once "loadTeemoTracker.php";
-
-//Make db connection
-$connect = mysqli_connect("localhost",SQL_USER,SQL_PASS,SQL_DATABASE);
-if (mysqli_connect_errno($connect)){die("Failed to connect to MySQL: " . mysqli_connect_error());}
 
 
 //Start by getting Champion Data.
