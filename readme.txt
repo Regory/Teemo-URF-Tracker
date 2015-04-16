@@ -3,6 +3,8 @@ Teemo URF Tracker
 Summarizes Match Stats for Teemo in League of Legends URF matches.
 Created for the Riot API Challenge.
 
+Demo at http://www.regory.com/teemo/
+
 Setting Up The Tracker
 
 1. Make an SQL database, and use database.sql to generate the tables.
