@@ -104,6 +104,12 @@ class RiotAPI{
 			return "FIN: Next Bucket hasn't occured yet!";
 		}
 		
+		//URF is over! :C
+		//This is to stop the script from endlessly searching for new matches
+		if($this->bucket > 1428918000){ //1428918000 is allegedly the last bucket with an URF match
+			return "FIN: URF is over! :C";
+		}
+		
 		//do the curlywurly
 		$call = "https://na.api.pvp.net/api/lol/".SERVER."/v4.1/game/ids?beginDate=".$this->bucket."&api_key=".RIOT_API_KEY;
 		$output = $this->curlywurly($call);
