@@ -176,13 +176,14 @@ class RiotAPI{
 		$query = "SELECT `matchID`, COUNT(`matchID`) as remaining FROM `matches` WHERE `checked` = 0 ORDER BY `matchID` ASC LIMIT 1";
 		$result = mysqli_query($this->connect,$query);
 		$result or die('Error: ' . mysqli_error($this->connect));
-		if(mysqli_num_rows($result) == 0){
-			//there are no more matches to check
-			return "FIN: No Matches to Check";
-		}
+
 		while($row = mysqli_fetch_array($result)){
 			$matchID = $row['matchID'];
 			$remaining = $row['remaining'];
+		}
+		
+		if(!matchID){
+			return "FIN: No Matches to Check";
 		}
 		
 		//do the curlywurly
@@ -231,13 +232,14 @@ class RiotAPI{
 		$query = "SELECT `matchID`, COUNT(`matchID`) as remaining FROM `matches` WHERE `analyzed` = 0 AND hasTrackedChampion = 1 ORDER BY `matchID` ASC LIMIT 1";
 		$result = mysqli_query($this->connect,$query);
 		$result or die('Error: ' . mysqli_error($this->connect));
-		if(mysqli_num_rows($result) == 0){
-			//there are no more matches to check
-			return "FIN: No Matches to Check";
-		}
+
 		while($row = mysqli_fetch_array($result)){
 			$matchID = $row['matchID'];
 			$remaining = $row['remaining'];
+		}
+		
+		if(!$matchID){
+			return "FIN: No Matches to Check";
 		}
 		
 		//do the curlywurly

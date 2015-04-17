@@ -257,25 +257,32 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 					<div class='subtitle'>Kill Chains</div>
 					<div>
 						<div class='panel2'>
-							<div>Double Kills:</div>
+							<div>Double Kills</div>
 							<div><?php echo $championStats['k2'] ?></div>
 						</div>
 						<div class='panel2'>
-							<div>Triple Kills:</div>
+							<div>Triple Kills</div>
 							<div><?php echo $championStats['k3'] ?></div>
 						</div>
 					</div>
 					<div>
 						<div class='panel2'>
-							<div>Quadra Kills:</div>
+							<div>Quadra Kills</div>
 							<div><?php echo $championStats['k4'] ?></div>
 						</div>
 						<div class='panel2'>
-							<div>Penta Kills:</div>
+							<div>Penta Kills</div>
 							<div><?php echo $championStats['k5'] ?></div>
 						</div>
 					</div>
-					<!-- Ultra Kills: <?php echo $championStats['k6'] ?> <br /> -->
+					<?php if($championStats['k6'] > 0){ ?>
+					<div>
+						<div class='panel1'>
+							<div>Ultra Kills</div>
+							<div><?php echo $championStats['k6'] ?></div>
+						</div>
+					</div>
+					<?php } ?>
 				</div>
 			</div>
 			<div class='sectionwrapper'>
@@ -304,6 +311,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 					</div>
 				</div>
 			</div>
+			<?php if(TRACKED_CHAMPION == 17){ //Mushrooms Placed is Teemo Only ?>
 			<div class='sectionwrapper'>
 				<div>
 					<div class='subtitle'>Mushrooms</div>
@@ -315,11 +323,14 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 							<div>Enough to completely cover about <?php echo number_format(round($mushrooms * 120*120 / (14990*15100),1)) ?> Summoner's Rifts</div>
 						</div>
 					</div>
-					<!--About 59% of Summoner's Rift is Walkable
-					Summoner's Rift is 14990 x 15100
-					Shroom is about 120 x 120-->
+					<!--
+						About 59% of Summoner's Rift is Walkable
+						Summoner's Rift is 14990 x 15100
+						Shroom is about 120 x 120
+					-->
 				</div>
 			</div>
+			<?php } ?>
 			<div class='sectionwrapper'>
 				<div>
 					<div class='subtitle'>Minions and Monsters</div>
@@ -427,11 +438,11 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 					<div>
 						<div class='panel2'>
 							<div>Towers</div>
-							<div><?php echo $championStats['towers'] ?></div>
+							<div><?php echo number_format($championStats['towers']) ?></div>
 						</div>
 						<div class='panel2'>
 							<div>Inhibitors</div>
-							<div><?php echo $championStats['inhibitors'] ?></div>
+							<div><?php echo number_format($championStats['inhibitors']) ?></div>
 						</div>
 					</div>
 				</div>
@@ -442,11 +453,11 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 					<div>
 						<div class='panel3'>
 							<div>Victories</div>
-							<div><?php echo $championStats['winner'] ?></div>
+							<div><?php echo number_format($championStats['winner']) ?></div>
 						</div>
 						<div class='panel3'>
 							<div>Losses</div>
-							<div><?php echo $championStats['totalMatches'] - $championStats['winner'] ?></div>
+							<div><?php echo number_format($championStats['totalMatches'] - $championStats['winner']) ?></div>
 						</div>
 						<div class='panel3'>
 							<div>Win %</div>
@@ -463,7 +474,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 					<div>
 						<div class='panel2'>
 							<div>First Bloods</div>
-							<div><?php echo $championStats['firstblood'] ?></div>
+							<div><?php echo number_format($championStats['firstblood']) ?></div>
 						</div>
 						<div class='panel2'>
 							<div>First Blood %</div>
