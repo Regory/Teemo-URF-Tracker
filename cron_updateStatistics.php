@@ -187,6 +187,43 @@ $result = mysqli_query($connect,$query);
 $result or die('Error: ' . mysqli_error($connect));
 
 
+//Tier Stats
+//summarize tier data from `match_stats` and put data in `tier_stats`
+$tierArray = array();
+$tierData = '';
+
+$query = <<<EOD
+SELECT 
+	`rank`,
+	SUM(`winner`) as wins,
+	COUNT(`matchId`) as totalMatches,
+	SUM(`k`) as k,
+	SUM(`d`) as d,
+	SUM(`a`) as a
+FROM `match_stats`
+WHERE `championId` = $trackedChampion
+GROUP BY `rank`
+EOD;
+
+$result = mysqli_query($connect,$query);
+$result or die('Error: ' . mysqli_error($connect));
+while($row = mysqli_fetch_array($result)){
+	$tier = $row['rank'];
+	$wins = $row['wins'];
+	$losses = $row['totalMatches'] - $row['wins'];
+	$k = $row['k'];
+	$d = $row['d'];
+	$a = $row['a'];
+	$tierData .= "('$tier', $trackedChampion, $wins, $losses, $k, $d, $a),";
+}
+$tierData = preg_replace("/,$/","",$tierData); //remove ending comma
+
+//Insert / Update new info
+$query = "INSERT INTO `tier_stats` (`tier`, `championId`, `wins`, `losses`, `k`, `d`, `a`) VALUES $tierData ON DUPLICATE KEY UPDATE `wins`=VALUES(`wins`), `losses`=VALUES(`losses`), `k`=VALUES(`k`), `d`=VALUES(`d`), `a`=VALUES(`a`)";
+$result = mysqli_query($connect,$query);
+$result or die('Error: ' . mysqli_error($connect));
+
+
 
 //Ward Stats
 $wardPlaceArray = array();
@@ -290,11 +327,6 @@ $result = mysqli_query($connect,$query);
 $result or die('Error: ' . mysqli_error($connect));
 
 
-
-
-
-
-//Teemo Specific Stats
 
 //teemo_kda_array
 $teemoKdaArray = array();

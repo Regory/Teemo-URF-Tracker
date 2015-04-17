@@ -76,6 +76,55 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 	}
 }
 
+//Tier Stats
+$query = "SELECT * FROM `tier_stats` WHERE championId = ".TRACKED_CHAMPION;
+$result = mysqli_query($connect,$query);
+$result or die('Error: ' . mysqli_error($connect));
+
+while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+	if($row['championId'] == TRACKED_CHAMPION){
+		$tierStats[$row['tier']] = $row;
+	}
+}
+
+$sortedTierStats [] = $tierStats['MASTER'];
+$sortedTierStats [] = $tierStats['DIAMOND'];
+$sortedTierStats [] = $tierStats['PLATINUM'];
+$sortedTierStats [] = $tierStats['GOLD'];
+$sortedTierStats [] = $tierStats['SILVER'];
+$sortedTierStats [] = $tierStats['BRONZE'];
+$sortedTierStats [] = $tierStats['UNRANKED'];
+
+
+$tierTable = <<<EOD
+<table class='tiertable'>
+	<tr>
+		<th>Tier</th>
+		<th>Wins</th>
+		<th>Losses</th>
+		<th>Win %</th>
+		<th>Kills</th>
+		<th>Deaths</th>
+		<th>Assists</th>
+	</tr>
+EOD;
+foreach($sortedTierStats as $k=>$v){
+	$tierTable .= "<tr>
+		<th>". $v['tier'] ."</th>
+		<th>". $v['wins'] ."</th>
+		<th>". $v['losses'] ."</th>
+		<th>". round($v['wins']/($v['wins']+$v['losses'])*100) ."%</th>
+		<th>". $v['k'] ."</th>
+		<th>". $v['d'] ."</th>
+		<th>". $v['a'] ."</th>
+	</tr>";
+}
+
+
+$tierTable .= "</table>";
+
+
+
 //Teemo KDA
 $query = "SELECT * FROM `teemo_kda_array`";
 $result = mysqli_query($connect,$query);
@@ -419,6 +468,16 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 						<div class='panel2'>
 							<div>First Blood %</div>
 							<div><?php echo round($championStats['firstblood'] / $championStats['totalMatches'] * 100,1) ?>%</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class='sectionwrapper'>
+				<div>
+					<div class='subtitle'>Tier Stats</div>
+					<div>
+						<div class='panel1'>
+							<div><?php echo $tierTable ?></div>
 						</div>
 					</div>
 				</div>

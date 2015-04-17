@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 15, 2015 at 09:13 PM
+-- Generation Time: Apr 16, 2015 at 09:59 PM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.4.23
 
@@ -37,7 +37,6 @@ CREATE TABLE IF NOT EXISTS `assists` (
   UNIQUE KEY `matchID` (`matchID`,`pID`,`timestamp`,`killerChampion`,`victimChampion`,`x`,`y`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
 -- --------------------------------------------------------
 
 --
@@ -54,7 +53,6 @@ CREATE TABLE IF NOT EXISTS `buildings` (
   `tower` varchar(50) NOT NULL,
   UNIQUE KEY `matchID` (`matchID`,`pID`,`timestamp`,`killerChampion`,`lane`,`building`,`tower`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
 
 -- --------------------------------------------------------
 
@@ -87,7 +85,6 @@ CREATE TABLE IF NOT EXISTS `champion_stats` (
   PRIMARY KEY (`championId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
 -- --------------------------------------------------------
 
 --
@@ -103,8 +100,6 @@ CREATE TABLE IF NOT EXISTS `deaths` (
   `y` int(6) NOT NULL,
   UNIQUE KEY `matchID` (`matchID`,`pID`,`timestamp`,`killerChampion`,`x`,`y`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-
 
 -- --------------------------------------------------------
 
@@ -145,8 +140,6 @@ CREATE TABLE IF NOT EXISTS `kills` (
   UNIQUE KEY `matchID` (`matchID`,`pID`,`timestamp`,`victimChampion`,`x`,`y`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -162,8 +155,6 @@ CREATE TABLE IF NOT EXISTS `matches` (
   PRIMARY KEY (`matchID`),
   UNIQUE KEY `matchID` (`matchID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-
 
 -- --------------------------------------------------------
 
@@ -200,8 +191,6 @@ CREATE TABLE IF NOT EXISTS `match_stats` (
   UNIQUE KEY `matchId` (`matchId`,`pID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -219,8 +208,6 @@ CREATE TABLE IF NOT EXISTS `monsters` (
   UNIQUE KEY `matchID` (`matchID`,`pID`,`timestamp`,`killerChampion`,`monster`,`x`,`y`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -237,8 +224,6 @@ CREATE TABLE IF NOT EXISTS `monster_stats` (
   UNIQUE KEY `championId` (`championId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -251,10 +236,27 @@ CREATE TABLE IF NOT EXISTS `teemo_kda_array` (
   `deaths` int(10) NOT NULL,
   `assistally` int(10) NOT NULL,
   `assistvictim` int(10) NOT NULL,
-  PRIMARY KEY (`championId`)
+  PRIMARY KEY (`championId`),
+  UNIQUE KEY `championId` (`championId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `tier_stats`
+--
+
+CREATE TABLE IF NOT EXISTS `tier_stats` (
+  `tier` varchar(10) NOT NULL,
+  `championId` int(3) NOT NULL,
+  `wins` int(8) NOT NULL,
+  `losses` int(8) NOT NULL,
+  `k` int(6) NOT NULL,
+  `d` int(6) NOT NULL,
+  `a` int(6) NOT NULL,
+  PRIMARY KEY (`tier`(1),`championId`),
+  UNIQUE KEY `tier` (`tier`(1),`championId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -271,8 +273,6 @@ CREATE TABLE IF NOT EXISTS `ward_kill` (
   UNIQUE KEY `matchID` (`matchID`,`pID`,`timestamp`,`killerChampion`,`wardType`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -287,8 +287,6 @@ CREATE TABLE IF NOT EXISTS `ward_place` (
   `wardType` varchar(50) NOT NULL,
   UNIQUE KEY `matchID` (`matchID`,`pID`,`timestamp`,`champion`,`wardType`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-
 
 -- --------------------------------------------------------
 
@@ -312,8 +310,6 @@ CREATE TABLE IF NOT EXISTS `ward_stats` (
   PRIMARY KEY (`championId`,`winner`),
   UNIQUE KEY `championId` (`championId`,`winner`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

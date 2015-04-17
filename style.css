@@ -160,6 +160,16 @@ body {
 	width: 40px;
 }
 
+/*Tier Stats*/
+
+.tierTable{
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	text-align: center;
+	
+}
+
 /*Wards*/
 
 .wardwins>div:nth-child(3n+1){

@@ -537,9 +537,4 @@ class RiotAPI{
 	}
 }
 
-
-
-
-
-
 ?>
