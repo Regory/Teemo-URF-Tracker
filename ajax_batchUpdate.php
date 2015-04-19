@@ -14,6 +14,9 @@ switch ($_POST['type']){
 	case 'analyze':
 		echo $riotAPI->analyzeNextMatch();
 		break;
+	case 'statistics':
+		echo $riotAPI->updateStatistics();
+		break;
 	default:
 		die("Command Not Recognized");
 		break;

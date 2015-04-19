@@ -320,7 +320,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 						<div class='panel1'>
 							<div>Mushrooms Placed:</div>
 							<div><?php $mushrooms = $wardStats[0]['mushroomPlaced'] + $wardStats[1]['mushroomPlaced']; echo number_format($mushrooms) ?></div>
-							<div>Enough to completely cover about <?php echo number_format(round($mushrooms * 120*120 / (14990*15100),1)) ?> Summoner's Rifts</div>
+							<div>Enough to completely cover Summoner's Rift about <?php echo number_format(round($mushrooms * 120*120 / (14990*15100),1)) ?> times</div>
 						</div>
 					</div>
 					<!--
@@ -338,7 +338,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 						<div class='panel1'>
 							<div>Minions Killed:</div>
 							<div><?php echo number_format($championStats['minions']) ?></div>
-							<div>Around <?php echo round($championStats['minions']/15/60/24, 1) ?> days of perfect last hitting</div>
+							<div>Around <?php echo round($championStats['minions']/13/60/24, 0) ?> days of perfect last hitting</div>
 						</div>
 					</div>
 				</div>

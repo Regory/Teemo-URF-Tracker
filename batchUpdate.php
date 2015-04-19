@@ -51,6 +51,13 @@
 						}
 					);
 				}
+				if(toggle == 4){
+					$.post("ajax_batchUpdate.php", {type:'statistics'}).done(
+						function(data){
+							$('#status').html(data+"<br />");
+						}
+					);
+				}
 			}
 			
 			
@@ -60,6 +67,7 @@
 		<input type='button' onclick='flipToggle(1)' value='Check Buckets'>
 		<input type='button' onclick='flipToggle(2)' value='Check Matches'>
 		<input type='button' onclick='flipToggle(3)' value='Analyze Matches'>
+		<input type='button' onclick='flipToggle(4)' value='Update Statistics'>
 		
 		<br /><br />
 		
